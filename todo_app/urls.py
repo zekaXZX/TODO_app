@@ -20,6 +20,18 @@ from todos import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home_page),
-    path('about/', views.about_page),
+    #path('', views.home_page),
+    path('about/', views.about_page, name="home"),
+    path(
+        "delete/<int:id>/",
+        views.delete_task,
+        name="delete_task"
+    ),
+    path(
+        "create/",
+        views.create_task,
+        name="create_task"
+
+
+    )
 ]

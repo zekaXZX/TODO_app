@@ -1,14 +1,303 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>My TODO</title>
+
     <link rel="stylesheet" href="{% static 'css/home_page.css' %}">
-    <script src="{% static 'js/home_page.js'%}"></script>
+    <script defer src="{% static 'js/home_page.js' %}"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 </head>
 <body>
-    <h1>TEMPLATE FOR HOME_PAGE</h1>
+
+<div class="modal" id="taskModal">
+
+    <div class="modal-content">
+
+        <button class="close-modal" id="closeModal">
+            ✕
+        </button>
+
+        <h2>Create new task</h2>
+
+        <form method="POST" action="{% url 'create_task'%}">
+
+            {% csrf_token %}
+
+            <input 
+                type="text"
+                name="title"
+                placeholder="Task title"
+                required
+            >
+
+            <textarea
+                name="description"
+                placeholder="Task description"
+                required
+            ></textarea>
+
+
+            <button type="submit" class="new-task">
+                Create Task
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="background">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="grid"></div>
+</div>
+
+<header class="navbar">
+
+    <div class="logo">
+
+        <div class="logo-circle">
+            ✓
+        </div>
+
+        <div>
+
+            <h2>My TODO</h2>
+            <span>Stay productive.</span>
+
+        </div>
+
+    </div>
+
+    <div class="nav-right">
+
+        <div class="search-box">
+
+            <svg class="search-icon" viewBox="0 0 24 24">
+
+                <path d="M21 21l-4.35-4.35m1.35-5.15a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"/>
+
+            </svg>
+
+            <input
+            type="text"
+            id="searchInput"
+            placeholder="Search tasks...">
+
+        </div>
+
+        <button id="themeToggle" class="theme-button">
+
+            <span class="sun">☀</span>
+
+            <span class="moon">🌙</span>
+
+        </button>
+
+    </div>
+
+</header>
+
+<main class="container">
+
+    <section class="hero">
+
+        <div>
+
+            <h1>
+
+                Organize your <span>life.</span>
+
+            </h1>
+
+            <p>
+
+                Keep everything under control with a clean,
+                modern workspace.
+
+            </p>
+
+        </div>
+
+        <button class="new-task">
+
+            ＋ New Task
+
+        </button>
+
+    </section>
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <h2>
+
+                {{ data|length }}
+
+            </h2>
+
+            <span>Total Tasks</span>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h2>
+
+                {% with completed=0 %}
+                ✔
+                {% endwith %}
+
+            </h2>
+
+            <span>Stay Focused</span>
+
+        </div>
+
+        <div class="stat-card">
+
+            <h2>
+
+                🚀
+
+            </h2>
+
+            <span>Keep Growing</span>
+
+        </div>
+
+    </section>
+
+    <section class="tasks-grid">
+
+        {% for task in data %}
+
+        <article class="task-card" data-id='{{ task.id }}'>
+
+            <div class="card-glow"></div>
+
+            <div class="task-top">
+
+                <h2>
+
+                    {{ task.title }}
+
+                </h2>
+
+                {% if task.status %}
+
+                    <span class="badge completed">
+
+                        Completed
+
+                    </span>
+
+                {% else %}
+
+                    <span class="badge pending">
+
+                        Pending
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            <div class="task-content">
+
+                {{ task.description }}
+
+            </div>
+
+            <div class="task-bottom">
+
+                <div class="task-date">
+
+                    📅 {{ task.date }}
+
+                </div>
+
+                <div class="actions">
+
+                    <button class="icon-btn edit">
+
+                        ✏
+
+                    </button>
+
+                    <a href="{% url 'delete_task' task.id %}"
+                    class="icon-btn delete">
+                        🗑
+                    </a>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+
+                📝
+
+            </div>
+
+            <h2>
+
+                No tasks yet
+
+            </h2>
+
+            <p>
+
+                Start by creating your first task.
+
+            </p>
+
+            <button class="new-task">
+
+                Create Task
+
+            </button>
+
+        </div>
+
+        {% endfor %}
+
+    </section>
+
+</main>
+
+<button id="scrollTop" class="scroll-top">
+
+    ↑
+
+</button>
+
+<div id="toast" class="toast">
+
+    Saved Successfully
+
+</div>
+
 </body>
 </html>
