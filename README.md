@@ -1,2 +1,2 @@
 # TODO_app
-To do app written backend of which is written on python with using framework Django
+To do app with backend written on python using framework Django
