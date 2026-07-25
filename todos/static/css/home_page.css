@@ -760,64 +760,90 @@ body{
         ACTION BUTTONS
 =========================== */
 
-.actions{
-
-    display:flex;
-
-    gap:12px;
-
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 10;
 }
 
-.icon-btn{
-
-    width:48px;
-
-    height:48px;
-
-    border-radius:14px;
-
-    border:1px solid var(--border);
-
-    background:var(--card);
-
-    color:var(--text);
-
-    cursor:pointer;
-
-    transition:.25s ease;
-
-    font-size:18px;
-
+.icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 15px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.icon-btn:hover{
-
-    transform:translateY(-4px) scale(1.08);
-
-    box-shadow:0 10px 25px rgba(0,0,0,.18);
-
+.icon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.edit:hover{
-
-    background:#3b82f6;
-
-    color:#fff;
-
-    border-color:#3b82f6;
-
+/* Edit Button */
+.icon-btn.edit:hover {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+    border-color: rgba(99, 102, 241, 0.4);
 }
 
-.delete:hover{
-
-    background:#ef4444;
-
-    color:#fff;
-
-    border-color:#ef4444;
-
+/* Complete Button */
+.icon-btn.complete:hover {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border-color: rgba(34, 197, 94, 0.4);
 }
 
+.icon-btn.complete.active {
+    background: #22c55e;
+    color: #ffffff;
+    border-color: #22c55e;
+}
+
+.icon-btn.complete.active:hover {
+    background: #16a34a;
+    border-color: #16a34a;
+}
+
+/* Delete Button */
+.icon-btn.delete:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.4);
+}
+
+/* ===========================
+        MODAL FIXES
+=========================== */
+
+.modal-content {
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-modal:hover {
+    color: var(--text);
+}
 
 /* ===========================
         EMPTY STATE

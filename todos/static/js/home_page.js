@@ -496,3 +496,55 @@ document.addEventListener(
 
 
 });
+
+// EDIT TASK MODAL
+
+const editButtons = document.querySelectorAll(".edit");
+const editModal = document.getElementById("editTaskModal");
+const closeEditModal = document.getElementById("closeEditModal");
+
+const editTitle = document.getElementById("editTitle");
+const editDescription = document.getElementById("editDescription");
+const editForm = document.getElementById("editTaskForm");
+
+
+editButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const id = button.dataset.id;
+        const title = button.dataset.title;
+        const description = button.dataset.description;
+
+
+        // вставляємо старі дані
+        editTitle.value = title;
+        editDescription.value = description;
+
+
+        // тут потім підставиш свій url для backend
+        editForm.action = button.dataset.url;
+
+
+        // показуємо модалку
+        editModal.classList.add("active");
+
+    });
+
+});
+
+
+// закрити вікно
+closeEditModal.addEventListener("click", () => {
+    editModal.classList.remove("active");
+});
+
+
+// закрити якщо клікнули поза вікном
+editModal.addEventListener("click", (e)=>{
+
+    if(e.target === editModal){
+        editModal.classList.remove("active");
+    }
+
+});

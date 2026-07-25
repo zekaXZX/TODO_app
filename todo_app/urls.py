@@ -20,8 +20,7 @@ from todos import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('', views.home_page),
-    path('about/', views.about_page, name="home"),
+    path('home/', views.home_page, name="home"),
     path(
         "delete/<int:id>/",
         views.delete_task,
@@ -33,5 +32,12 @@ urlpatterns = [
         name="create_task"
 
 
-    )
+    ),
+    path("complete/<int:id>/",
+        views.complete_task,
+        name="complete_task"),
+
+    path("/edit/<int:id>/",
+         views.edit_task,
+         name = "edit_task")
 ]

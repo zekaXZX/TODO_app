@@ -5,10 +5,8 @@ from django.shortcuts import redirect, get_object_or_404
 
 
 
-#def home_page(request):
-#    return render(request, 'home_page.html')
     
-def about_page(request):
+def home_page(request):
     data = TODO_data.objects.all()
     return render(request, 'home_page.html', { 'data': data})
 
@@ -20,7 +18,7 @@ def delete_task(request, id):
 
     task.delete()
 
-    return redirect("/about")
+    return redirect("home")
 
 
 def create_task(request):
@@ -35,4 +33,28 @@ def create_task(request):
 
         )
 
-    return redirect("/about")
+    return redirect("home")
+def complete_task(request, id):
+    task = get_object_or_404(
+        TODO_data,
+        id=id
+    )
+    task.status = not task.status
+    task.save()
+    return redirect("home")
+
+def edit_task(request, id):
+
+    task = get_object_or_404(
+                    TODO_data,
+                    id=id
+            )
+
+    if request.method == 'POST':
+
+        task.title = request.POST["title"]
+        task.description = request.POST["description"]
+
+        task.save()
+
+    return redirect("home")
