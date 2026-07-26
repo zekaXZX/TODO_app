@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'todos',
+    'authentification',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'todo_app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': ['templates', 'authentification/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
