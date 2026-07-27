@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 # Create your views here.
 def register(request):
     if request.method == "POST":
@@ -22,3 +22,8 @@ def auth_user(request):
     else:
         form = AuthenticationForm()
     return render(request, 'authentification/login.html', {"form": form})
+
+def logout_user(request):
+    if request.method == "POST":
+        logout(request)
+        return redirect('home')
