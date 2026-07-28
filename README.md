@@ -43,3 +43,5 @@ A full-stack task management application built with Django.
 - Search
 - Filtering
 - Pagination
+- Safety improvements
+- Database change to PostgreSQL
