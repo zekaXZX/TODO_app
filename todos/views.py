@@ -3,13 +3,16 @@ from django.http import HttpResponse
 from .models import TODO_data
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 
 @login_required(login_url='/login')
 def home_page(request):
-    data = TODO_data.objects.filter(user=request.user)
-    return render(request, 'home_page.html', { 'data': data})
+    data = TODO_data.objects.filter(user=request.user).order_by("date")
+    completed_tasks = data.filter(status=True).count()
+    uncompleted_tasks = data.filter(status=False).count()
+    return render(request, 'home_page.html', { 'data': data, 'completed_tasks': completed_tasks, 'uncompleted_tasks': uncompleted_tasks})
 
 @login_required(login_url='/login')
 def delete_task(request, id):
@@ -48,7 +51,7 @@ def complete_task(request, id):
     )
     task.status = not task.status
     task.save()
-    return redirect("home")
+    return redirect(f"{reverse('home')}#task-{task.id}")
 
 @login_required(login_url='/login')
 def edit_task(request, id):

@@ -97,18 +97,18 @@
             <span>Total Tasks</span>
         </div>
         <div class="stat-card">
-            <h2>✔</h2>
-            <span>Stay Focused</span>
+            <h2>{{ completed_tasks }}</h2>
+            <span>Completed Tasks</span>
         </div>
         <div class="stat-card">
-            <h2>🚀</h2>
-            <span>Keep Growing</span>
+            <h2>{{ uncompleted_tasks }}</h2>
+            <span>Uncompleted Tasks</span>
         </div>
     </section>
 
     <section class="tasks-grid">
         {% for task in data %}
-        <article class="task-card" data-id='{{ task.id }}'>
+        <article id="task-{{ task.id }}" class="task-card" data-id="{{ task.id }}">
             <div class="card-glow"></div>
 
             <div class="task-top">
