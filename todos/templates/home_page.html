@@ -24,6 +24,16 @@
             {% csrf_token %}
             <input type="text" name="title" placeholder="Task title" required>
             <textarea name="description" placeholder="Task description" required></textarea>
+            <div class="form-group">
+                <label for="createCategory">Category</label>
+                <select id="createCategory" name="category" class="category-select">
+                    <option value="study">📚 Study</option>
+                    <option value="work">💼 Work</option>
+                    <option value="personal">🏠 Personal</option>
+                    <option value="shopping">🛒 Shopping</option>
+                    <option value="health">💪 Health</option>
+                </select>
+            </div>
             <button type="submit" class="new-task">Create Task</button>
         </form>
     </div>
@@ -38,6 +48,16 @@
             {% csrf_token %}
             <input type="text" name="title" id="editTitle" placeholder="Task title" required>
             <textarea name="description" id="editDescription" placeholder="Task description" required></textarea>
+            <div class="form-group">
+                <label for="editCategory">Category</label>
+                <select id="editCategory" name="category" class="category-select">
+                    <option value="study">📚 Study</option>
+                    <option value="work">💼 Work</option>
+                    <option value="personal">🏠 Personal</option>
+                    <option value="shopping">🛒 Shopping</option>
+                    <option value="health">💪 Health</option>
+                </select>
+            </div>
             <button type="submit" class="new-task">Save Changes</button>
         </form>
     </div>
@@ -59,26 +79,24 @@
     </div>
 
     <div class="nav-right">
-    <div class="search-box">
-        <svg class="search-icon" viewBox="0 0 24 24">
-            <path d="M21 21l-4.35-4.35m1.35-5.15a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <input type="text" id="searchInput" placeholder="Search tasks...">
-    </div>
+        <div class="search-box">
+            <svg class="search-icon" viewBox="0 0 24 24">
+                <path d="M21 21l-4.35-4.35m1.35-5.15a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search tasks...">
+        </div>
 
-    <button id="themeToggle" class="theme-button">
-        <span class="sun">☀</span>
-        <span class="moon">🌙</span>
-    </button>
-
-    <form method="POST" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="logout-button">
-            Logout
+        <button id="themeToggle" class="theme-button">
+            <span class="sun">☀</span>
+            <span class="moon">🌙</span>
         </button>
-    </form>
-</div>
+
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </div>
 </header>
 
 <main class="container">
@@ -106,18 +124,36 @@
         </div>
     </section>
 
+    <div class="category-tabs">
+        <button class="category-filter active" data-category="all">✨ All</button>
+        <button class="category-filter" data-category="study">📚 Study</button>
+        <button class="category-filter" data-category="work">💼 Work</button>
+        <button class="category-filter" data-category="personal">🏠 Personal</button>
+        <button class="category-filter" data-category="shopping">🛒 Shopping</button>
+        <button class="category-filter" data-category="health">💪 Health</button>
+    </div>
+
     <section class="tasks-grid">
         {% for task in data %}
-        <article id="task-{{ task.id }}" class="task-card" data-id="{{ task.id }}">
+        <article id="task-{{ task.id }}" class="task-card" data-id="{{ task.id }}" data-category="{{ task.category }}">
             <div class="card-glow"></div>
 
             <div class="task-top">
                 <h2>{{ task.title }}</h2>
-                {% if task.status %}
-                    <span class="badge completed">Completed</span>
-                {% else %}
-                    <span class="badge pending">Pending</span>
-                {% endif %}
+
+                <div class="badges">
+                    {% if task.category %}
+                        <span class="category-badge {{ task.category }}">
+                            {{ task.category }}
+                        </span>
+                    {% endif %}
+
+                    {% if task.status %}
+                        <span class="badge completed">Completed</span>
+                    {% else %}
+                        <span class="badge pending">Pending</span>
+                    {% endif %}
+                </div>
             </div>
 
             <div class="task-content">
@@ -132,26 +168,20 @@
                         class="icon-btn edit"
                         data-url="{% url 'edit_task' task.id %}"
                         data-title="{{ task.title|escapejs }}"
-                        data-description="{{ task.description|escapejs }}">
+                        data-description="{{ task.description|escapejs }}"
+                        data-category="{{ task.category }}">
                         ✏️
                     </button>
 
-                    <div class="actions">
-
                     {% if task.status %}
                         <a href="{% url 'complete_task' task.id %}" 
-                        class="icon-btn complete active" 
-                        title="Mark as pending">
-                            ✓
-                        </a>
+                           class="icon-btn complete active" 
+                           title="Mark as pending">✓</a>
                     {% else %}
                         <a href="{% url 'complete_task' task.id %}" 
-                        class="icon-btn complete" 
-                        title="Mark as completed">
-                            ✓
-                        </a>
+                           class="icon-btn complete" 
+                           title="Mark as completed">✓</a>
                     {% endif %}
-                </div>  
 
                     <a href="{% url 'delete_task' task.id %}" class="icon-btn delete" title="Delete task">
                         🗑️
@@ -159,7 +189,6 @@
                 </div>  
             </div>
         </article>
-
         {% empty %}
         <div class="empty-state">
             <div class="empty-icon">📝</div>
@@ -173,7 +202,6 @@
 </main>
 
 <button id="scrollTop" class="scroll-top">↑</button>
-
 <div id="toast" class="toast">Saved Successfully</div>
 
 </body>

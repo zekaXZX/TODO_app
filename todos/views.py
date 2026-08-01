@@ -31,12 +31,14 @@ def create_task(request):
     if request.method == 'POST':
         title = request.POST.get('title')
         description = request.POST.get('description')
+        category = request.POST.get('category')
 
         TODO_data.objects.create(
             user = request.user,
             title=title,
 
-            description=description
+            description=description,
+            category=category,
 
         )
 
@@ -66,6 +68,7 @@ def edit_task(request, id):
 
         task.title = request.POST["title"]
         task.description = request.POST["description"]
+        task.category = request.POST["category"]
 
         task.save()
 

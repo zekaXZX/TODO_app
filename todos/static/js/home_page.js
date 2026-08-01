@@ -1,5 +1,65 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    const tasks = document.querySelectorAll(".task-card");
+    const searchInput = document.getElementById("searchInput");
+    const categoryButtons = document.querySelectorAll(".category-filter");
+
+    let currentCategory = "all";
+    let currentSearchQuery = "";
+
+    /* ===========================
+        UNIFIED FILTERING (SEARCH + CATEGORY)
+    =========================== */
+    function applyFilters() {
+        tasks.forEach(task => {
+            const taskText = task.innerText.toLowerCase();
+            const taskCategory = task.dataset.category ? task.dataset.category.toLowerCase() : "";
+
+            const matchesCategory = (currentCategory === "all") || (taskCategory === currentCategory);
+            const matchesSearch = taskText.includes(currentSearchQuery);
+
+            if (matchesCategory && matchesSearch) {
+                task.style.display = "block";
+                setTimeout(() => task.style.opacity = "1", 10);
+            } else {
+                task.style.opacity = "0";
+                task.style.display = "none";
+            }
+        });
+    }
+
+    /* ===========================
+            CATEGORY FILTER
+    =========================== */
+    categoryButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            currentCategory = button.dataset.category.toLowerCase();
+
+            categoryButtons.forEach(btn => btn.classList.remove("active"));
+            button.classList.add("active");
+
+            applyFilters();
+        });
+    });
+
+    /* ===========================
+            SEARCH
+    =========================== */
+    if (searchInput) {
+        searchInput.addEventListener("input", () => {
+            currentSearchQuery = searchInput.value.toLowerCase().trim();
+            applyFilters();
+        });
+    }
+
+    /* Keyboard shortcut CTRL + K */
+    document.addEventListener("keydown", (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+            e.preventDefault();
+            searchInput?.focus();
+        }
+    });
+
     /* ===========================
             THEME SWITCHER
     =========================== */
@@ -25,37 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ===========================
-            SEARCH
-    =========================== */
-    const searchInput = document.getElementById("searchInput");
-    const tasks = document.querySelectorAll(".task-card");
-
-    if (searchInput) {
-        searchInput.addEventListener("input", () => {
-            const value = searchInput.value.toLowerCase();
-
-            tasks.forEach(task => {
-                const text = task.innerText.toLowerCase();
-                if (text.includes(value)) {
-                    task.style.display = "block";
-                    setTimeout(() => task.style.opacity = "1", 50);
-                } else {
-                    task.style.opacity = "0";
-                    setTimeout(() => task.style.display = "none", 300);
-                }
-            });
-        });
-    }
-
-    /* Keyboard shortcut CTRL + K */
-    document.addEventListener("keydown", (e) => {
-        if (e.ctrlKey && e.key === "k") {
-            e.preventDefault();
-            searchInput?.focus();
-        }
-    });
-
-    /* ===========================
             SCROLL BUTTON
     =========================== */
     const scrollButton = document.getElementById("scrollTop");
@@ -73,14 +102,17 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ===========================
             BUTTON RIPPLE
     =========================== */
-    document.querySelectorAll("a").forEach(button => {
+    document.querySelectorAll("a, button").forEach(button => {
         button.addEventListener("click", function(e) {
+            if (this.type === "submit") return;
+
             const circle = document.createElement("span");
             const diameter = Math.max(this.clientWidth, this.clientHeight);
+            const rect = this.getBoundingClientRect();
 
             circle.style.width = circle.style.height = `${diameter}px`;
-            circle.style.left = `${e.clientX - this.offsetLeft - diameter / 2}px`;
-            circle.style.top = `${e.clientY - this.offsetTop - diameter / 2}px`;
+            circle.style.left = `${e.clientX - rect.left - diameter / 2}px`;
+            circle.style.top = `${e.clientY - rect.top - diameter / 2}px`;
             circle.classList.add("ripple");
 
             this.appendChild(circle);
@@ -110,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
             CREATE TASK MODAL
     =========================== */
     const modal = document.getElementById("taskModal");
-    const openButtons = document.querySelectorAll(".new-task");
+    const openButtons = document.querySelectorAll(".hero .new-task, .empty-state .new-task");
     const closeModal = document.getElementById("closeModal");
 
     openButtons.forEach(btn => btn.addEventListener("click", () => modal?.classList.add("active")));
@@ -126,14 +158,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const editButtons = document.querySelectorAll(".edit");
     const editModal = document.getElementById("editTaskModal");
     const closeEditModal = document.getElementById("closeEditModal");
+
     const editTitle = document.getElementById("editTitle");
     const editDescription = document.getElementById("editDescription");
+    const editCategory = document.getElementById("editCategory");
     const editForm = document.getElementById("editTaskForm");
 
     editButtons.forEach(button => {
         button.addEventListener("click", () => {
             if (editTitle) editTitle.value = button.dataset.title || "";
             if (editDescription) editDescription.value = button.dataset.description || "";
+            if (editCategory) editCategory.value = button.dataset.category || "";
+
             if (editForm) editForm.action = button.dataset.url || "";
 
             editModal?.classList.add("active");

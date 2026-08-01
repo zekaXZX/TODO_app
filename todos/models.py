@@ -10,4 +10,5 @@ class TODO_data(models.Model):
     title = models.CharField(max_length=75)
     description = models.TextField()
     status = models.BooleanField(default=False)
+    category = models.CharField(max_length=30)
     date = models.DateTimeField(auto_now_add=True)
