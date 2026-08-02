@@ -19,8 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const matchesSearch = taskText.includes(currentSearchQuery);
 
             if (matchesCategory && matchesSearch) {
-                task.style.display = "block";
-                setTimeout(() => task.style.opacity = "1", 10);
+                task.style.display = ""; // ✅ Скидаємо до CSS (display: flex)
+                setTimeout(() => {
+                    task.style.opacity = "1";
+                    task.style.transform = "translateY(0)";
+                }, 10);
             } else {
                 task.style.opacity = "0";
                 task.style.display = "none";
@@ -52,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    /* Keyboard shortcut CTRL + K */
+    /* Keyboard shortcut CTRL + K або CMD + K */
     document.addEventListener("keydown", (e) => {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
             e.preventDefault();
@@ -76,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const currentTheme = html.getAttribute("data-theme");
             const newTheme = currentTheme === "dark" ? "light" : "dark";
 
-            html.style.transition = "0.4s";
+            html.style.transition = "background-color 0.4s, color 0.4s";
             html.setAttribute("data-theme", newTheme);
             localStorage.setItem("theme", newTheme);
 
@@ -91,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (scrollButton) {
         window.addEventListener("scroll", () => {
-            scrollButton.classList.toggle("show", window.scrollY > 500);
+            scrollButton.classList.toggle("show", window.scrollY > 300);
         });
 
         scrollButton.addEventListener("click", () => {
@@ -100,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ===========================
-            BUTTON RIPPLE
+            BUTTON RIPPLE EFFECT
     =========================== */
     document.querySelectorAll("a, button").forEach(button => {
         button.addEventListener("click", function(e) {
@@ -121,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* ===========================
-            CARD REVEAL
+            CARD REVEAL (INTERSECTION OBSERVER)
     =========================== */
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
@@ -130,11 +133,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 entry.target.style.transform = "translateY(0)";
             }
         });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.1 });
 
     tasks.forEach(card => {
         card.style.opacity = "0";
-        card.style.transform = "translateY(40px)";
+        card.style.transform = "translateY(20px)";
+        card.style.transition = "opacity 0.3s ease, transform 0.3s ease";
         observer.observe(card);
     });
 
@@ -142,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
             CREATE TASK MODAL
     =========================== */
     const modal = document.getElementById("taskModal");
-    const openButtons = document.querySelectorAll(".hero .new-task, .empty-state .new-task");
+    const openButtons = document.querySelectorAll(".new-task"); // ✅ Знаходить всі кнопки створення
     const closeModal = document.getElementById("closeModal");
 
     openButtons.forEach(btn => btn.addEventListener("click", () => modal?.classList.add("active")));
